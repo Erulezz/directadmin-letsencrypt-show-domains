@@ -14,10 +14,12 @@ do
 	created=`cat ${dirname}/${domain}.cert.creation_time`;
 	created_date=`date -d @$created`;
 	renewal_date=`date -d "$created_date+60 days"`;
+	renewal_days=$(expr '(' $created + 5184000 - $(date +%s) ')' / 86400)
 
         echo "Lets Encrypt domain: $domain";
 	echo "-- Created: $created_date - $created";	
-	echo "-- Renewed on: $renewal_date";
+	echo "-- Renewal: $renewal_date";
+	echo "-- Renewal in $renewal_days days.";
 	echo "";
 
     fi;
