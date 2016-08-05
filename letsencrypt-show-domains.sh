@@ -29,5 +29,24 @@ done;
 
 echo "";
 echo "Lets Encrypt domains: $ledomains";
+echo "";
+
+if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
+    then
+
+	sanconfig=`cat /usr/local/directadmin/conf/ca.san_config | grep "subjectAltName"`;
+	created=`cat /usr/local/directadmin/conf/cacert.pem.creation_time`;
+	created_date=`date -d @$created`;
+	renewal_date=`date -d "$created_date+60 days"`;
+	renewal_days=$(expr '(' $created + 5184000 - $(date +%s) ')' / 86400)
+
+        echo "Lets Encrypt Hostname";
+	echo "$sanconfig";
+	echo "-- Created: $created_date - $created";	
+	echo "-- Renewal: $renewal_date";
+	echo "-- Renewal in $renewal_days days.";
+	echo "";
+
+fi;
 
 exit 0;
