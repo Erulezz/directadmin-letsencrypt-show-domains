@@ -27,7 +27,7 @@ do
 	echo "$sanconfig";
 	echo "-- Created: $created_date - $created";	
 	echo "-- Renewal: $renewal_date";
-	echo "-- Renewal in $renewal_days days.";
+	echo "-- Renewal in ~ $renewal_days days.";
 	echo "";
 
     fi;
@@ -49,7 +49,7 @@ if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
 	echo "$sanconfig";
 	echo "-- Created: $created_date - $created";	
 	echo "-- Renewal: $renewal_date";
-	echo "-- Renewal in $renewal_days days.";
+	echo "-- Renewal in ~ $renewal_days days.";
 	echo "";
 
 fi;
