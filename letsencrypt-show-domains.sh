@@ -1,11 +1,22 @@
 #!/bin/bash
 
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 ledomains=0
 letsencrypt_renewal_days=`/usr/local/directadmin/directadmin c | grep ^letsencrypt_renewal_days= | cut -d\= -f2`
+account_email=`cat /usr/local/directadmin/data/users/admin/user.conf | grep ^email= | cut -d\= -f2`
 
-echo "LetsEncrypt renewal days (DirectAdmin config): $letsencrypt_renewal_days";
+echo "--------------------------------------------------";
+echo "-------------- ${bold}General Information${normal} ---------------";
+echo "--------------------------------------------------";
 echo "";
-echo "----------User LetsEncrypt certificates:----------";
+echo "${bold}LetsEncrypt renewal days (DirectAdmin config):${normal} $letsencrypt_renewal_days";
+echo "${bold}LetsEncrypt Account Email:${normal} $account_email";
+echo "";
+echo "--------------------------------------------------";
+echo "--------- ${bold}User LetsEncrypt certificates${normal} ----------";
+echo "--------------------------------------------------";
 echo "";
 
 for san in `ls -1 /usr/local/directadmin/data/users/*/domains/*.san_config`;
@@ -23,7 +34,7 @@ do
 	renewal_date=`LC_ALL=en_US.utf8 date -d "$created_date+$letsencrypt_renewal_days days"`;
 	renewal_days=$(expr '(' $created + 5184000 - $(LC_ALL=en_US.utf8 date +%s) ')' / 86400)
 
-        echo "Lets Encrypt domain: $domain";
+        echo "${bold}Lets Encrypt domain: $domain${normal}";
 	echo "$sanconfig";
 	echo "-- Created: $created_date - $created";	
 	echo "-- Renewal: $renewal_date";
@@ -33,7 +44,7 @@ do
     fi;
 done;
 
-echo "Total LetsEncrypt domains: $ledomains";
+echo "${bold}Total LetsEncrypt domains:${normal} $ledomains";
 echo "";
 
 if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
@@ -45,7 +56,9 @@ if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
 	renewal_date=`LC_ALL=en_US.utf8 date -d "$created_date+$letsencrypt_renewal_days days"`;
 	renewal_days=$(expr '(' $created + 5184000 - $(LC_ALL=en_US.utf8 date +%s) ')' / 86400)
 
-        echo "-----Lets Encrypt for the Hostname-----";
+        echo "---------------------------------------";
+        echo "----${bold} Lets Encrypt for the Hostname${normal} ----";
+        echo "---------------------------------------";
 	echo "$sanconfig";
 	echo "-- Created: $created_date - $created";	
 	echo "-- Renewal: $renewal_date";
