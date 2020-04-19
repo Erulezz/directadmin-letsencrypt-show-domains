@@ -1,6 +1,6 @@
-# directadmin-letsencrypt-show-domains
-Small script to show all the Let's Encrypt domains that are created & managed by DirectAdmin.
-Currently there is no quick way in DirectAdmin to show all the domains that are using Let's Encrypt for SSL certificates. With this small script you can quickly display all the domains and confirm if every certificate is renewed on time. 
+# Show every domain with active Let's Encrypt certificates
+Script to show all the Let's Encrypt domains that are created & managed by DirectAdmin.
+Currently there is no quick way in DirectAdmin to show all the domains that are using Let's Encrypt for TLS certificates. With this script you can quickly display all the domains with their renewal date and confirm if every certificate is renewed on time. 
 
 ## Usage
 Create a new file:
