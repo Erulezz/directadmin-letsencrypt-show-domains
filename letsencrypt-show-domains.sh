@@ -19,24 +19,27 @@ echo "--------- ${bold}User LetsEncrypt certificates${normal} ----------";
 echo "--------------------------------------------------";
 echo "";
 
-for san in `ls -1 /usr/local/directadmin/data/users/*/domains/*.san_config`;
+for certificate in `ls -1 /usr/local/directadmin/data/users/*/domains/*.csr_info`;
 do
-    domain=`basename ${san}`;
-    dirname=`dirname ${san}`;
-    domain=${domain%.san_config};
+    csr_info=`basename ${certificate}`;
+    dirname=`dirname ${certificate}`;
+    domain=${csr_info%.csr_info};
+
     if [ -e "${dirname}/${domain}.cert.creation_time" ] && [ -e "${dirname}/${domain}.cert" ] && [ -e "${dirname}/${domain}.key" ];
     then
 	ledomains=$[ledomains + 1];
 
-	sanconfig=`cat ${dirname}/${domain}.san_config | grep "subjectAltName"`;
+	csr_name=`cat ${dirname}/${domain}.csr_info | grep "NAME"`;
+	alt_names=`openssl x509 -text -noout -in ${dirname}/${domain}.cert | grep "DNS" | tr -d ' '`;
 	created=`cat ${dirname}/${domain}.cert.creation_time`;
 	created_date=`LC_ALL=en_US.utf8 date -d @$created`;
 	renewal_date=`LC_ALL=en_US.utf8 date -d "$created_date+$letsencrypt_renewal_days days"`;
 	renewal_days=$(expr '(' $created + 5184000 - $(LC_ALL=en_US.utf8 date +%s) ')' / 86400)
 
         echo "${bold}Lets Encrypt domain: $domain${normal}";
-	echo "$sanconfig";
-	echo "-- Created: $created_date - $created";	
+	echo "CSR Name: $csr_name";
+	echo "Alternative Names: $alt_names";
+	echo "-- Created: $created_date - (Timestamp: $created)";
 	echo "-- Renewal: $renewal_date";
 	echo "-- Renewal in ~ $renewal_days days.";
 	echo "";
@@ -50,7 +53,6 @@ echo "";
 if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
     then
 
-	sanconfig=`cat /usr/local/directadmin/conf/ca.san_config | grep "subjectAltName"`;
 	created=`cat /usr/local/directadmin/conf/cacert.pem.creation_time`;
 	created_date=`LC_ALL=en_US.utf8 date -d @$created`;
 	renewal_date=`LC_ALL=en_US.utf8 date -d "$created_date+$letsencrypt_renewal_days days"`;
@@ -59,7 +61,7 @@ if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
         echo "---------------------------------------";
         echo "----${bold} Lets Encrypt for the Hostname${normal} ----";
         echo "---------------------------------------";
-	echo "$sanconfig";
+	echo $HOSTNAME;
 	echo "-- Created: $created_date - $created";	
 	echo "-- Renewal: $renewal_date";
 	echo "-- Renewal in ~ $renewal_days days.";
