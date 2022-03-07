@@ -31,6 +31,8 @@ do
 
 	csr_name=`cat ${dirname}/${domain}.csr_info | grep "NAME"`;
 	alt_names=`openssl x509 -text -noout -in ${dirname}/${domain}.cert | grep "DNS" | tr -d ' '`;
+	signature_algorithm=`openssl x509 -text -noout -in ${dirname}/${domain}.cert | grep -m 1 "Signature Algorithm" | tr -d ' '`;
+	public_key=`openssl x509 -text -noout -in ${dirname}/${domain}.cert | grep -m 1 "Public-Key:" | tr -d ' '`;
 	created=`cat ${dirname}/${domain}.cert.creation_time`;
 	created_date=`LC_ALL=en_US.utf8 date -d @$created`;
 	renewal_date=`LC_ALL=en_US.utf8 date -d "$created_date+$letsencrypt_renewal_days days"`;
@@ -39,6 +41,7 @@ do
         echo "${bold}Lets Encrypt domain: $domain${normal}";
 	echo "CSR Name: $csr_name";
 	echo "Alternative Names: $alt_names";
+	echo "$signature_algorithm - $public_key";
 	echo "-- Created: $created_date - (Timestamp: $created)";
 	echo "-- Renewal: $renewal_date";
 	echo "-- Renewal in ~ $renewal_days days.";
@@ -62,7 +65,7 @@ if [ -e "/usr/local/directadmin/conf/cacert.pem.creation_time" ];
         echo "----${bold} Lets Encrypt for the Hostname${normal} ----";
         echo "---------------------------------------";
 	echo $HOSTNAME;
-	echo "-- Created: $created_date - $created";	
+	echo "-- Created: $created_date - (Timestamp: $created)";
 	echo "-- Renewal: $renewal_date";
 	echo "-- Renewal in ~ $renewal_days days.";
 	echo "";
